@@ -1,0 +1,18 @@
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: white; /* Optional: track color */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #f56565; /* Equivalent to Tailwind's bg-red-500 */
+  border-radius: 6px;
+  border: 3px solid white; /* Optional: space around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #e53e3e; /* Darker shade for hover state */
+}
