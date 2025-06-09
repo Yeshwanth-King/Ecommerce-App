@@ -4,6 +4,8 @@ import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import Center from "./Center";
 import { CartContexts } from "./CartContext";
+import Logo1 from "../public/Logo.svg"; // Adjust the path as necessary
+import Image from "next/image";
 
 const StyleHeader = styled.header`
   background-color: #222;
@@ -40,9 +42,11 @@ const Nav = styled.nav`
   @media (max-width: 768px) {
     flex-direction: column;
     width: 100%;
-    max-height: ${({ isOpen }) => (isOpen ? "400px" : "0")}; // Control height animation
+    max-height: ${({ isOpen }) =>
+      isOpen ? "400px" : "0"}; // Control height animation
     opacity: ${({ isOpen }) => (isOpen ? "1" : "0")}; // Fade in/out effect
-    transform: ${({ isOpen }) => (isOpen ? "translateY(0)" : "translateY(-20px)")}; // Slide down/up effect
+    transform: ${({ isOpen }) =>
+      isOpen ? "translateY(0)" : "translateY(-20px)"}; // Slide down/up effect
     transition: max-height 0.6s ease, opacity 0.4s ease, transform 0.4s ease; // Smooth animation for max-height, opacity, and transform
   }
 `;
@@ -100,7 +104,9 @@ const Header = () => {
           <ToggleButton onClick={toggleMenu} className={isOpen ? "open" : ""}>
             <span>{isOpen ? "✖" : "☰"}</span>
           </ToggleButton>
-          <Logo href={"/"}>ShopSphere</Logo>
+          <Logo href={"http://localhost:3000/"}>
+            <Image src={Logo1} width={150} height={100} />
+          </Logo>
           <Nav isOpen={isOpen}>
             <NavLink href={"/"}>Home</NavLink>
             <NavLink href={"/products"}>Products</NavLink>

@@ -38,7 +38,7 @@ export async function POST(req, res) {
     }
 
     let orderDoc = await Order.create({
-        line_items: line_items, name, email, address, city, state, pincode, paid: false
+        line_items: line_items, name, email, address, city, state, pincode, paid: true
     })
 
     const session = await stripe.checkout.sessions.create({
