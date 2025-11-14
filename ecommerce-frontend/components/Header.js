@@ -1,93 +1,11 @@
 "use client";
 import Link from "next/link";
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
-import Center from "./Center";
 import { CartContexts } from "./CartContext";
-import Logo1 from "../public/Logo.svg"; // Adjust the path as necessary
+import Logo1 from "../public/Logo.svg";
 import Image from "next/image";
-
-const StyleHeader = styled.header`
-  background-color: #222;
-  color: white;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-`;
-
-const Logo = styled(Link)`
-  font-size: 1.5rem;
-  color: white;
-  text-decoration: none;
-
-  @media (max-width: 768px) {
-    margin-bottom: 10px;
-  }
-`;
-
-const Nav = styled.nav`
-  display: flex;
-  gap: 1rem;
-  color: #ccc;
-  overflow: hidden; // Hide overflowing content when menu is closed
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    width: 100%;
-    max-height: ${({ isOpen }) =>
-      isOpen ? "400px" : "0"}; // Control height animation
-    opacity: ${({ isOpen }) => (isOpen ? "1" : "0")}; // Fade in/out effect
-    transform: ${({ isOpen }) =>
-      isOpen ? "translateY(0)" : "translateY(-20px)"}; // Slide down/up effect
-    transition: max-height 0.6s ease, opacity 0.4s ease, transform 0.4s ease; // Smooth animation for max-height, opacity, and transform
-  }
-`;
-
-const NavLink = styled(Link)`
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.3s;
-
-  &:hover {
-    color: #fff;
-  }
-
-  @media (max-width: 768px) {
-    padding: 0.5rem 0;
-    width: 100%;
-    text-align: left;
-  }
-`;
-const ToggleButton = styled.button`
-  display: none;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-
-  @media (max-width: 768px) {
-    display: block;
-  }
-
-  span {
-    display: inline-block;
-    transition: transform 0.4s ease;
-  }
-
-  &.open span {
-    transform: rotate(180deg); // Rotate icon when open
-  }
-`;
+import { ShoppingCart, Menu, X, Home, Package, Grid, User } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 const Header = () => {
   const { cartProducts } = useContext(CartContexts);
@@ -97,26 +15,92 @@ const Header = () => {
     setIsOpen(!isOpen);
   };
 
+  const navItems = [
+    { href: "/", label: "Home", icon: Home },
+    { href: "/products", label: "Products", icon: Package },
+    { href: "/categories", label: "Categories", icon: Grid },
+    { href: "/account", label: "Account", icon: User },
+  ];
+
   return (
-    <StyleHeader>
-      <Center>
-        <Wrapper>
-          <ToggleButton onClick={toggleMenu} className={isOpen ? "open" : ""}>
-            <span>{isOpen ? "✖" : "☰"}</span>
-          </ToggleButton>
-          <Logo href={"http://localhost:3000/"}>
-            <Image src={Logo1} width={150} height={100} />
-          </Logo>
-          <Nav isOpen={isOpen}>
-            <NavLink href={"/"}>Home</NavLink>
-            <NavLink href={"/products"}>Products</NavLink>
-            <NavLink href={"/categories"}>Categories</NavLink>
-            <NavLink href={"/account"}>Account</NavLink>
-            <NavLink href={"/cart"}>Cart ({cartProducts?.length})</NavLink>
-          </Nav>
-        </Wrapper>
-      </Center>
-    </StyleHeader>
+    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <Image src={Logo1} width={120} height={40} alt="Logo" priority className="object-contain" />
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-primary-600 transition-all"
+              >
+                <item.icon className="w-4 h-4" />
+                {item.label}
+              </Link>
+            ))}
+            <Link
+              href="/cart"
+              className="relative flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-all ml-2"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              Cart
+              {cartProducts?.length > 0 && (
+                <Badge variant="secondary" className="ml-1 bg-white text-primary-600">
+                  {cartProducts.length}
+                </Badge>
+              )}
+            </Link>
+          </nav>
+
+          {/* Mobile menu button */}
+          <button
+            onClick={toggleMenu}
+            className="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <nav className="py-4 space-y-1">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-3 px-4 py-3 text-base font-medium text-gray-700 rounded-md hover:bg-gray-100 hover:text-primary-600 transition-all"
+                onClick={() => setIsOpen(false)}
+              >
+                <item.icon className="w-5 h-5" />
+                {item.label}
+              </Link>
+            ))}
+            <Link
+              href="/cart"
+              className="flex items-center gap-3 px-4 py-3 text-base font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-all"
+              onClick={() => setIsOpen(false)}
+            >
+              <ShoppingCart className="w-5 h-5" />
+              Cart
+              {cartProducts?.length > 0 && (
+                <Badge variant="secondary" className="ml-auto bg-white text-primary-600">
+                  {cartProducts.length}
+                </Badge>
+              )}
+            </Link>
+          </nav>
+        </div>
+      </div>
+    </header>
   );
 };
 

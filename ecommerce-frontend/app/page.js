@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import HeroItem from "@/components/HeroItem";
 import LatestProduct from "@/components/LatestProduct";
 import connectDB from "@/lib/connectDB";
@@ -40,12 +41,13 @@ export default async function Home() {
 
 
   return (
-    <>
-      <div>
-        <Header />
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 flex flex-col">
+      <Header />
+      <main className="flex-1">
         <HeroItem product={heroPro} />
         <LatestProduct lateProduct={latePro} />
-      </div>
-    </>
+      </main>
+      <Footer />
+    </div>
   );
 }

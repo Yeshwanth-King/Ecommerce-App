@@ -1,36 +1,62 @@
+"use client";
 import React, { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CartContexts } from "./CartContext";
+import { Card, CardContent, CardFooter } from "./ui/card";
+import { Button } from "./ui/button";
+import { ShoppingCart, Eye } from "lucide-react";
 
 const ProductBox = ({ product }) => {
-  const { addToCart } = useContext(CartContexts)
+  const { addToCart } = useContext(CartContexts);
   const AddProToCart = (id) => {
-    addToCart(id)
+    addToCart(id);
+  };
 
-  }
   return (
-    <div>
-      <div className="bg-white px-2 rounded-xl py-5 flex flex-col justify-between items-center gap-2 h-full">
-        <Link href={"/products/" + product?._id} className="flex flex-col justify-center items-center gap-2">
+    <Card className="group overflow-hidden h-full flex flex-col">
+      <Link href={"/products/" + product?._id} className="relative block overflow-hidden">
+        <div className="relative aspect-square overflow-hidden bg-gray-100">
           <Image
             src={product?.images[0]}
             alt={product?.Name}
-            width={200}
-            height={200}
+            fill
+            className="object-cover transition-all duration-300 group-hover:scale-110"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
-          <h1 className="text-lg font-semibold">{product?.Name}</h1>
-        </Link>
-        <div className="flex justify-between py-2 px-2 w-full items-center">
-          <p className="text-xl font-semibold text-slate-600">
-            ₹{product?.Price}
-          </p>
-          <button onClick={() => { AddProToCart(product._id) }} className="border-2 border-blue-500 font-medium text-blue-500 hover:bg-blue-500 hover:text-white transition-all duration-300 py-1 px-2 rounded-lg">
-            Add to Cart
-          </button>
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
+          <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <Button size="icon" variant="secondary" className="rounded-full shadow-lg">
+              <Eye className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
-      </div>
-    </div>
+      </Link>
+
+      <CardContent className="flex-1 p-4">
+        <Link href={"/products/" + product?._id}>
+          <h3 className="font-semibold text-lg mb-2 line-clamp-2 hover:text-primary-600 transition-colors">
+            {product?.Name}
+          </h3>
+        </Link>
+        <div className="flex items-center justify-between mt-auto">
+          <span className="text-2xl font-bold text-primary-600">
+            ₹{product?.Price?.toLocaleString()}
+          </span>
+        </div>
+      </CardContent>
+
+      <CardFooter className="p-4 pt-0">
+        <Button
+          onClick={() => AddProToCart(product._id)}
+          className="w-full"
+          variant="default"
+        >
+          <ShoppingCart className="w-4 h-4 mr-2" />
+          Add to Cart
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 
